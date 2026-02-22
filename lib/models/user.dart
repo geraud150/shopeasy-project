@@ -13,13 +13,16 @@ class User {
     required this.token,
   });
 
+  /// Permet de parser un utilisateur depuis une réponse API qui peut être :
+  /// { user: {...}, token: ... } ou { id: ..., firstName: ..., ... }
   factory User.fromJson(Map<String, dynamic> json) {
+    final userJson = json['user'] ?? json;
     return User(
-      id: json['user']['id'] ?? json['id'],
-      firstName: json['user']['firstName'] ?? json['firstName'],
-      lastName: json['user']['lastName'] ?? json['lastName'],
-      email: json['user']['email'] ?? json['email'],
-      token: json['token'],
+      id: userJson['id'] ?? 0,
+      firstName: userJson['firstName'] ?? '',
+      lastName: userJson['lastName'] ?? '',
+      email: userJson['email'] ?? '',
+      token: json['token'] ?? '',
     );
   }
 }

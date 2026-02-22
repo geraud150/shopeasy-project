@@ -19,12 +19,12 @@ class Product {
   // It allows us to easily convert the data we get from the API into a Product object.
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      id: json['id'],
-      title: json['title'],
-      description: json['description'],
+      id: json['id'] ?? 0,
+      title: json['title'] ?? '',
+      description: json['description'] ?? '',
       price: (json['price'] as num).toDouble(),
-      quantityInStock: json['quantityInStock'],
-      imageUrl: json['imageUrl'],
+      quantityInStock: json['quantityInStock'] ?? 0,
+      imageUrl: json['imageUrl'] ?? '',
     );
   }
 }

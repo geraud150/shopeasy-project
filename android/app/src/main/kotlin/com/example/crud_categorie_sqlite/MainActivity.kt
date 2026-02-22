@@ -1,4 +1,4 @@
-package com.example.crud_categorie_sqlite
+package com.example.shopeasyproject
 
 import io.flutter.embedding.android.FlutterActivity
 

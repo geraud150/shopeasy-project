@@ -14,20 +14,25 @@ class EditProfileScreen extends StatefulWidget {
 
 class EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _usernameController;
+  late TextEditingController _firstNameController;
+  late TextEditingController _lastNameController;
   late TextEditingController _emailController;
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    _usernameController = TextEditingController(text: widget.user?.lastName ?? '');
+    _firstNameController =
+        TextEditingController(text: widget.user?.firstName ?? '');
+    _lastNameController =
+        TextEditingController(text: widget.user?.lastName ?? '');
     _emailController = TextEditingController(text: widget.user?.email ?? '');
   }
 
   @override
   void dispose() {
-    _usernameController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
     _emailController.dispose();
     super.dispose();
   }
@@ -44,7 +49,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
     try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       await authProvider.updateUserProfile(
-        _usernameController.text,
+        _lastNameController.text,
         _emailController.text,
       );
 
@@ -85,11 +90,22 @@ class EditProfileScreenState extends State<EditProfileScreen> {
           child: Column(
             children: [
               TextFormField(
-                controller: _usernameController,
-                decoration: const InputDecoration(labelText: 'Username'),
+                controller: _firstNameController,
+                decoration: const InputDecoration(labelText: 'First Name'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your username';
+                    return 'Please enter your first name';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _lastNameController,
+                decoration: const InputDecoration(labelText: 'Last Name'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your last name';
                   }
                   return null;
                 },
@@ -103,7 +119,8 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
                   }
-                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                      .hasMatch(value)) {
                     return 'Please enter a valid email';
                   }
                   return null;

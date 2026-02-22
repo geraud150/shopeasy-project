@@ -1,10 +1,7 @@
-// lib/screens/cart_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopeasy_flutter/screens/checkout_screen.dart';
 import 'package:shopeasy_flutter/models/cart.dart';
-
-
 
 class CartScreen extends StatelessWidget {
   const CartScreen({Key? key}) : super(key: key);
@@ -21,14 +18,29 @@ class CartScreen extends StatelessWidget {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: ListView.builder(
-              itemCount: cartItems.length,
-              itemBuilder: (ctx, i) => ListTile(
-                title: Text(cartItems[i].title),
-                subtitle: Text('Total: \$${(cartItems[i].price * cartItems[i].quantity).toStringAsFixed(2)}'),
-                trailing: Text('${cartItems[i].quantity} x'),
-              ),
-            ),
+            child: cartItems.isEmpty
+                ? const Center(child: Text('Votre panier est vide'))
+                : ListView.builder(
+                    itemCount: cartItems.length,
+                    itemBuilder: (ctx, i) {
+                      final item = cartItems[i];
+                      return ListTile(
+                        leading: CircleAvatar(
+                          child: Text(item.quantity.toString()),
+                        ),
+                        title: Text(item.title),
+                        subtitle: Text(
+                          'Total: \$${(item.price * item.quantity).toStringAsFixed(2)}',
+                        ),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () {
+                            cart.removeItem(item.id);
+                          },
+                        ),
+                      );
+                    },
+                  ),
           ),
           const SizedBox(height: 10),
           Padding(
@@ -38,24 +50,31 @@ class CartScreen extends StatelessWidget {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
+                  children: [
                     const Text(
                       'Total',
                       style: TextStyle(fontSize: 20),
                     ),
                     Text(
                       '\$${cart.totalAmount.toStringAsFixed(2)}',
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const CheckoutScreen()),
-                    );
-                  },
+                  onPressed: cartItems.isEmpty
+                      ? null
+                      : () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const CheckoutScreen(),
+                            ),
+                          );
+                        },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),

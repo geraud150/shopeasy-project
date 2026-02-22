@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shopeasy_flutter/screens/login_screen.dart';
+import 'package:shopeasy_flutter/screens/home_screen.dart';
+import 'package:shopeasy_flutter/providers/auth_provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -13,13 +16,25 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // Navigate to the LoginScreen after a 3-second delay.
-    Timer(
-      const Duration(seconds: 3),
-      () => Navigator.of(context).pushReplacement(
+    Timer(const Duration(seconds: 3), () {
+      _redirect();
+    });
+  }
+
+  void _redirect() {
+    if (!mounted) return;
+
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    if (authProvider.isAuthenticated) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (BuildContext context) => const HomeScreen()),
+      );
+    } else {
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (BuildContext context) => const LoginScreen()),
-      ),
-    );
+      );
+    }
   }
 
   @override
@@ -30,13 +45,10 @@ class SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // We assume the logo is at this path.
-            // When the user adds the logo, it will appear here.
             Image.asset(
               'assets/images/logo.png',
               height: 150,
               errorBuilder: (context, error, stackTrace) {
-                // This widget is displayed if the logo file is not found.
                 return const Icon(
                   Icons.shopping_cart,
                   size: 150,

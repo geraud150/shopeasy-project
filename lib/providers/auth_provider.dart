@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopeasy_flutter/models/user.dart';
 import 'package:shopeasy_flutter/services/api_service.dart';
 
@@ -7,14 +8,17 @@ class AuthProvider extends ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   final ApiService _apiService = ApiService();
+  SharedPreferences? _prefs;
 
-  // Getters
+  AuthProvider(SharedPreferences? prefs) : _prefs = prefs {
+    _loadToken();
+  }
+
   User? get user => _user;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   bool get isAuthenticated => _user != null;
 
-  // Setters internes
   void _setLoading(bool loading) {
     _isLoading = loading;
     notifyListeners();
@@ -25,7 +29,28 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // 🔐 Connexion
+  Future<void> _loadToken() async {
+    _prefs ??= await SharedPreferences.getInstance();
+    final token = _prefs!.getString('auth_token');
+    if (token != null) {
+      _apiService.setAuthToken(token);
+      await _loadUserFromToken();
+    }
+  }
+
+  Future<void> _loadUserFromToken() async {
+    try {
+      final responseData = await _apiService.get('auth/me');
+      _user = User.fromJson(responseData);
+      notifyListeners();
+    } catch (e) {
+      await _prefs!.remove('auth_token');
+      _apiService.setAuthToken(null);
+      _user = null;
+      notifyListeners();
+    }
+  }
+
   Future<String?> login(String email, String password) async {
     _setLoading(true);
     _setError(null);
@@ -37,24 +62,24 @@ class AuthProvider extends ChangeNotifier {
 
       _user = User.fromJson(responseData);
       _apiService.setAuthToken(_user!.token);
+      await _prefs!.setString('auth_token', _user!.token);
       notifyListeners();
       _setLoading(false);
       return _user!.token;
     } catch (e) {
       _setError(e.toString());
       _setLoading(false);
-      return null;
+      rethrow;
     }
   }
 
-  // 🔓 Déconnexion
   Future<void> logout() async {
     _user = null;
     _apiService.setAuthToken(null);
+    await _prefs!.remove('auth_token');
     notifyListeners();
   }
 
-  // 📝 Mise à jour du profil
   Future<void> updateUserProfile(String lastName, String email) async {
     if (_user == null) {
       throw Exception('User not logged in');
@@ -80,7 +105,6 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // 🆕 Inscription
   Future<void> signUp(String firstName, String lastName, String email, String password) async {
     _setLoading(true);
     _setError(null);
@@ -92,12 +116,9 @@ class AuthProvider extends ChangeNotifier {
         'password': password,
       });
 
-      if (_user?.token == null || _user!.token.isEmpty) {
-  throw Exception('Failed to sign up: No token received');
-}
-
       _user = User.fromJson(responseData);
       _apiService.setAuthToken(_user!.token);
+      await _prefs!.setString('auth_token', _user!.token);
       notifyListeners();
     } catch (e) {
       _setError(e.toString());

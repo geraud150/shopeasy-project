@@ -21,7 +21,9 @@ class ProfileScreen extends StatelessWidget {
       body: ListView(
         children: <Widget>[
           UserAccountsDrawerHeader(
-            accountName: Text(user?.lastName ?? 'Loading...'),
+            accountName: Text(user != null
+                ? '${user.firstName} ${user.lastName}'
+                : 'Loading...'),
             accountEmail: Text(user?.email ?? 'Loading...'),
             currentAccountPicture: const CircleAvatar(
               backgroundColor: Colors.white,
@@ -34,7 +36,7 @@ class ProfileScreen extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => const OrderHistoryScreen(),
+                  builder: (context) =>  OrderHistoryScreen(),
                 ),
               );
             },
@@ -45,6 +47,7 @@ class ProfileScreen extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
+                  // ✅ Pas de const ici car user est dynamique
                   builder: (context) => EditProfileScreen(user: user),
                 ),
               );
@@ -68,7 +71,8 @@ class ProfileScreen extends StatelessWidget {
             onTap: () {
               authProvider.logout();
               Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                MaterialPageRoute(
+                    builder: (context) => const LoginScreen()),
                 (Route<dynamic> route) => false,
               );
             },
