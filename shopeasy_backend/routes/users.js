@@ -3,9 +3,35 @@ const router = express.Router();
 const { User, LoginHistory } = require('../models');
 const { protect } = require('../middleware/authMiddleware');
 
+// Register a new user
+router.post('/register', async (req, res) => {
+  try {
+    const { firstName, lastName, email, password } = req.body;
+    const user = await User.create({ firstName, lastName, email, password });
+    res.status(201).json({
+      message: 'User created successfully',
+      user: {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 // Get user profile
 router.get('/me', protect, async (req, res) => {
-  res.json(req.user);
+  res.json({
+    user: {
+      id: req.user.id,
+      firstName: req.user.firstName,
+      lastName: req.user.lastName,
+      email: req.user.email,
+    },
+  });
 });
 
 // Update user profile
@@ -23,7 +49,14 @@ router.put('/me', protect, async (req, res) => {
     user.email = email || user.email;
 
     await user.save();
-    res.json(user);
+    res.json({
+      user: {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+      },
+    });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
