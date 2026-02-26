@@ -9,6 +9,18 @@ const Order = sequelize.define('Order', {
   totalAmount: {
     type: DataTypes.FLOAT,
   },
+  street: {
+    type: DataTypes.STRING,
+  },
+  city: {
+    type: DataTypes.STRING,
+  },
+  zipCode: {
+    type: DataTypes.STRING,
+  },
+  country: {
+    type: DataTypes.STRING,
+  },
 });
 
 module.exports = Order;

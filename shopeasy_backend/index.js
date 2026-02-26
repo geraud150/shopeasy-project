@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.send('ShopEasy API is running...');
+  res.json({ message: 'ShopEasy API is running...' });
 });
 
 // Routes
@@ -18,6 +18,18 @@ app.use('/api/categories', require('./routes/categories'));
 app.use('/api/products', require('./routes/products'));
 app.use('/api/stock', require('./routes/stock'));
 app.use('/api/cart', require('./routes/cart'));
+app.use('/api/orders', require('./routes/orders')); // ✅ Ajout
+
+// ✅ Gestionnaire 404 — renvoie JSON au lieu de HTML
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
+
+// ✅ Gestionnaire d'erreurs global
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: err.message });
+});
 
 const PORT = process.env.PORT || 3000;
 
