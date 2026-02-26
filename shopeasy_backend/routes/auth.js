@@ -3,16 +3,37 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { User, LoginHistory } = require('../models');
+const { protect } = require('../middleware/authMiddleware');
 
 // Register a new user
 router.post('/register', async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
     const user = await User.create({ firstName, lastName, email, password });
-    res.status(201).json({ message: 'User created successfully', userId: user.id });
+    res.status(201).json({
+      message: 'User created successfully',
+      user: {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+      },
+    });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
+});
+
+// Get current user
+router.get('/me', protect, async (req, res) => {
+  res.json({
+    user: {
+      id: req.user.id,
+      firstName: req.user.firstName,
+      lastName: req.user.lastName,
+      email: req.user.email,
+    },
+  });
 });
 
 // Login a user
@@ -41,7 +62,15 @@ router.post('/login', async (req, res) => {
       expiresIn: '1d',
     });
 
-    res.json({ token, userId: user.id });
+    res.json({
+      token,
+      user: {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+      },
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

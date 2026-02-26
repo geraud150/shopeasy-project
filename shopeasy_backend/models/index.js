@@ -6,6 +6,7 @@ const StockMovement = require('./StockMovement');
 const Order = require('./Order');
 const OrderItem = require('./OrderItem');
 const LoginHistory = require('./LoginHistory');
+const Review = require('./Review');
 
 // User -> Category (One-to-Many)
 User.hasMany(Category);
@@ -27,9 +28,23 @@ Order.belongsTo(User);
 Order.belongsToMany(Product, { through: OrderItem });
 Product.belongsToMany(Order, { through: OrderItem });
 
+Order.hasMany(OrderItem);
+OrderItem.belongsTo(Order);
+
+Product.hasMany(OrderItem);
+OrderItem.belongsTo(Product);
+
 // User -> LoginHistory (One-to-Many)
 User.hasMany(LoginHistory);
 LoginHistory.belongsTo(User);
+
+// Product -> Review (One-to-Many)
+Product.hasMany(Review);
+Review.belongsTo(Product);
+
+// User -> Review (One-to-Many)
+User.hasMany(Review);
+Review.belongsTo(User);
 
 const db = {
   sequelize,
@@ -40,6 +55,7 @@ const db = {
   Order,
   OrderItem,
   LoginHistory,
+  Review,
 };
 
 module.exports = db;
