@@ -35,3 +35,12 @@ build/
 *.log
 .vscode/
 .idea/
+
+echo "linux/" >> .gitignore
+echo "macos/" >> .gitignore
+echo "windows/" >> .gitignore
+echo "android/" >> .gitignore
+echo "ios/" >> .gitignore
+echo "assets/" >> .gitignore
+echo "build/" >> .gitignore
+echo ".dart_tool/" >> .gitignore
