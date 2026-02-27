@@ -1,7 +1,44 @@
-# Flutter-related
-**/Flutter/ephemeral/
-**/Pods/
+# Dependencies
+node_modules/
 
-# Xcode-related
-**/dgph
+# Environment variables
+.env
+
+# ===== FLUTTER/DART =====
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+
+# ===== ANDROID =====
+**/android/local.properties
+**/android/.gradle
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/gradle/wrapper/
+**/android/key.properties
+*.jks
+
+# ===== IOS =====
+**/ios/Pods/
+**/ios/.symlinks/
+**/Flutter/ephemeral/
+
+# ===== GENERATED FILES =====
+**/generated_plugin_registrant.cc
+**/generated_plugin_registrant.h
+**/generated_plugins.cmake
+**/GeneratedPluginRegistrant.swift
+**/GeneratedPluginRegistrant.h
+**/GeneratedPluginRegistrant.m
+
+# ===== DIVERS =====
+.DS_Store
+*.log
+.vscode/
+.idea/
 **/xcuserdata/
