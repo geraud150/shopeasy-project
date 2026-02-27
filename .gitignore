@@ -1,0 +1,10 @@
+# Ignorer Flutter et IDE
+android/
+ios/
+linux/
+macos/
+windows/
+assets/
+build/
+.dart_tool/
+.idea/
