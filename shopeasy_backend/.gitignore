@@ -1,5 +1,37 @@
-# Dependencies
-/node_modules
-
-# Environment variables
+# ===== NODE.JS (Backend) =====
+node_modules/
+npm-debug.log
 .env
+
+# ===== FLUTTER/DART (Frontend) =====
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+*.g.dart
+*.freezed.dart
+
+# ===== ANDROID =====
+**/android/local.properties
+**/android/.gradle
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/gradle/wrapper/
+**/android/key.properties
+*.jks
+
+# ===== IOS =====
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+
+# ===== DIVERS =====
+.DS_Store
+*.log
+.vscode/
+.idea/
