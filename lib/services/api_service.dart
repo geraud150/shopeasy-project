@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'dart:async';
+import 'package:shopeasy_flutter/models/category.dart';
 
 class ApiService {
   static const String baseUrl = 'https://shopeasy-backend-levs.onrender.com/api';
@@ -164,5 +165,16 @@ class ApiService {
   Future<bool> checkConnectivity() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     return !connectivityResult.contains(ConnectivityResult.none);
+    }
+
+    Future<List<Category>> fetchCategories() async {
+  try {
+    final response = await get('api/categories');
+    return (response as List).map((categoryJson) => Category.fromJson(categoryJson)).toList();
+  } catch (e) {
+    throw Exception('Failed to load categories');
   }
 }
+
+  }
+
