@@ -1,9 +1,8 @@
-# ===== NODE.JS (Backend) =====
+# Dependencies
 node_modules/
-npm-debug.log
 .env
 
-# ===== FLUTTER/DART (Frontend) =====
+# ===== FLUTTER/DART =====
 build/
 .dart_tool/
 .flutter-plugins
@@ -11,8 +10,6 @@ build/
 .packages
 .pub-cache/
 .pub/
-*.g.dart
-*.freezed.dart
 
 # ===== ANDROID =====
 **/android/local.properties
@@ -27,20 +24,24 @@ build/
 # ===== IOS =====
 **/ios/Pods/
 **/ios/.symlinks/
-**/ios/Flutter/Flutter.framework
-**/ios/Flutter/Flutter.podspec
+**/Flutter/ephemeral/
+
+# ===== PLATEFORMES NON UTILISÉES =====
+linux/
+macos/
+windows/
+
+# ===== GENERATED FILES =====
+**/generated_plugin_registrant.cc
+**/generated_plugin_registrant.h
+**/generated_plugins.cmake
+**/GeneratedPluginRegistrant.swift
+**/GeneratedPluginRegistrant.h
+**/GeneratedPluginRegistrant.m
 
 # ===== DIVERS =====
 .DS_Store
 *.log
 .vscode/
 .idea/
-
-echo "linux/" >> .gitignore
-echo "macos/" >> .gitignore
-echo "windows/" >> .gitignore
-echo "android/" >> .gitignore
-echo "ios/" >> .gitignore
-echo "assets/" >> .gitignore
-echo "build/" >> .gitignore
-echo ".dart_tool/" >> .gitignore
+**/xcuserdata/
