@@ -31,12 +31,16 @@ String? get token => _prefs?.getString('auth_token');
     notifyListeners();
   }
 
+  bool _isInitialized = false;
+  bool get isInitialized => _isInitialized;
+
   Future<void> _loadToken() async {
     _prefs ??= await SharedPreferences.getInstance();
     final token = _prefs!.getString('auth_token');
     if (token != null) {
       _apiService.setAuthToken(token);
       await _loadUserFromToken();
+      _isInitialized = true; 
     }
   }
 

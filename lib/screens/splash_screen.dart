@@ -20,10 +20,21 @@ void initState() {
 }
 
 Future<void> _checkAuth() async {
-  // Attend que le token soit chargé
-  await Future.delayed(const Duration(seconds: 2));
-if (!mounted) return;
-_redirect();
+  final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+  await Future.wait([
+    Future.delayed(const Duration(seconds: 2)),
+    _waitForInit(authProvider),
+  ]);
+
+  if (!mounted) return;
+  _redirect();
+}
+
+Future<void> _waitForInit(AuthProvider authProvider) async {
+  while (!authProvider.isInitialized) {
+    await Future.delayed(const Duration(milliseconds: 100));
+  }
 }
 
   void _redirect() {
