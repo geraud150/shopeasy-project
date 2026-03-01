@@ -18,6 +18,8 @@ class AuthProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   bool get isAuthenticated => _user != null;
+  // Dans auth_provider.dart, ajoute cette ligne
+String? get token => _prefs?.getString('auth_token');
 
   void _setLoading(bool loading) {
     _isLoading = loading;

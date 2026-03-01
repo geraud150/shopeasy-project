@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shopeasy_flutter/models/order.dart';
 import 'package:shopeasy_flutter/services/api_service.dart';
+import 'package:shopeasy_flutter/providers/auth_provider.dart';
 
 class OrderHistoryScreen extends StatelessWidget {
   OrderHistoryScreen({Key? key}) : super(key: key);
@@ -14,6 +16,9 @@ class OrderHistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final token = Provider.of<AuthProvider>(context, listen: false).token;
+    _apiService.setAuthToken(token);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Order History'),
@@ -35,14 +40,12 @@ class OrderHistoryScreen extends StatelessWidget {
               final order = orders[index];
               return ExpansionTile(
                 title: Text('Commande #${order.id} - ${order.status}'),
-                subtitle:
-                    Text('Total: \\${order.totalAmount.toStringAsFixed(2)}'),
+                subtitle: Text('Total: \$${order.totalAmount.toStringAsFixed(2)}'),
                 children: order.items
                     .map((item) => ListTile(
                           title: Text('Produit: ${item.id}'),
                           subtitle: Text('Quantité: ${item.quantity}'),
-                          trailing:
-                              Text('Prix: \\${item.price.toStringAsFixed(2)}'),
+                          trailing: Text('Prix: \$${item.price.toStringAsFixed(2)}'),
                         ))
                     .toList(),
               );

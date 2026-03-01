@@ -14,12 +14,17 @@ class SplashScreen extends StatefulWidget {
 
 class SplashScreenState extends State<SplashScreen> {
   @override
-  void initState() {
-    super.initState();
-    Timer(const Duration(seconds: 3), () {
-      _redirect();
-    });
-  }
+void initState() {
+  super.initState();
+  _checkAuth();
+}
+
+Future<void> _checkAuth() async {
+  // Attend que le token soit chargé
+  await Future.delayed(const Duration(seconds: 2));
+if (!mounted) return;
+_redirect();
+}
 
   void _redirect() {
     if (!mounted) return;

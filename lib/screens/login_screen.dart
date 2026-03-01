@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopeasy_flutter/providers/auth_provider.dart';
 import 'package:logger/logger.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shopeasy_flutter/screens/signup_screen.dart'; // Assure-toi d'importer SignUpScreen
 
 final logger = Logger();
-const _storage = FlutterSecureStorage();
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -21,49 +19,7 @@ class LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _isLoading = false;
 
-  Future<void> _submit() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final token = await authProvider.login(_emailController.text, _passwordController.text);
-
-      if (token != null) {
-        await _storage.write(key: 'auth_token', value: token);
-        if (!mounted) return;
-        Navigator.of(context).pushReplacementNamed('/home');
-      } else {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to get token.'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } catch (e) {
-      if (!mounted) return;
-      logger.e('Login failed: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Login failed: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
-  }
+  
 
   @override
   void dispose() {
@@ -71,7 +27,51 @@ class LoginScreenState extends State<LoginScreen> {
     _passwordController.dispose();
     super.dispose();
   }
+Future<void> _submit() async {
+  if (!_formKey.currentState!.validate()) {
+    return;
+  }
 
+  setState(() {
+    _isLoading = true;
+  });
+
+  try {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final token = await authProvider.login(
+      _emailController.text,
+      _passwordController.text,
+    );
+
+    if (token != null) {
+      if (!mounted) return;
+      Navigator.of(context).pushReplacementNamed('/home');
+    } else {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to get token.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  } catch (e) {
+    if (!mounted) return;
+    logger.e('Login failed: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Login failed: $e'),
+        backgroundColor: Colors.red,
+      ),
+    );
+  } finally {
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(

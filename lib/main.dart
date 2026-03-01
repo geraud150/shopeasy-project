@@ -8,7 +8,8 @@ import 'package:shopeasy_flutter/theme.dart';
 import 'package:shopeasy_flutter/models/cart.dart';
 import 'package:shopeasy_flutter/screens/login_screen.dart';  
 import 'package:shopeasy_flutter/screens/signup_screen.dart';  
-import 'package:shopeasy_flutter/screens/home_screen.dart'; 
+import 'package:shopeasy_flutter/screens/home_screen.dart';
+import 'package:shopeasy_flutter/screens/profile_screen.dart'; 
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
     '/login': (context) => const LoginScreen(),
     '/signup': (context) => const SignUpScreen(),
     '/home': (context) => const HomeScreen(),
+    '/profile': (context) => const ProfileScreen(),
     },
   );
  }

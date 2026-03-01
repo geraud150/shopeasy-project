@@ -4,6 +4,9 @@ import 'package:shopeasy_flutter/models/product.dart';
 import 'package:shopeasy_flutter/models/category.dart';
 import 'package:shopeasy_flutter/screens/product_details_screen.dart';
 import 'package:shopeasy_flutter/screens/cart_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:shopeasy_flutter/providers/auth_provider.dart';
+import 'package:shopeasy_flutter/providers/theme_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -53,6 +56,31 @@ class HomeScreenState extends State<HomeScreen> {
               );
             },
           ),
+          IconButton(
+      icon: const Icon(Icons.person),
+      onPressed: () {
+        Navigator.of(context).pushNamed('/profile');
+      },
+    ),
+
+ IconButton(
+      icon: Provider.of<ThemeProvider>(context).currentTheme == ThemeMode.dark
+          ? const Icon(Icons.light_mode)
+          : const Icon(Icons.dark_mode),
+      onPressed: () {
+        Provider.of<ThemeProvider>(context, listen: false).toggleDarkMode();
+      },
+    ),
+          IconButton(
+  icon: const Icon(Icons.logout),
+  onPressed: () async {
+        final navigator = Navigator.of(context);
+    await Provider.of<AuthProvider>(context, listen: false).logout();
+    navigator.pushReplacementNamed('/login');
+    if (!mounted) return;
+    
+  },
+),
         ],
       ),
       body: Column(
